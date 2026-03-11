@@ -16,7 +16,7 @@ public class Task {
     @Column(nullable = false)
     private String title;
 
-    @Column(columnDefinition = "TEXT") // Pro delší texty používáme TEXT místo klasického VARCHAR(255)
+    @Column(columnDefinition = "TEXT") // For longer texts we use TEXT instead of the classic VARCHAR(255)
     private String description;
 
     @Column(name = "points_tier", nullable = false)
