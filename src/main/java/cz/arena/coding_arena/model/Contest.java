@@ -18,7 +18,7 @@ public class Contest {
     private String name;
 
     @Column(nullable = false)
-    private String mode; // LIVE nebo LADDER
+    private String mode; // LIVE or LADDER
 
     @Column(name = "start_time")
     private LocalDateTime startTime;
