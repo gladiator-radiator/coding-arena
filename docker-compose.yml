@@ -39,7 +39,7 @@ services:
 
   judge0-server:
     image: judge0/judge0:1.13.1
-    command: ["./scripts/server"]
+    command: ["bundle", "exec", "puma", "-C", "config/puma.rb"]
     ports:
       - "2358:2358"
     environment:
@@ -55,7 +55,7 @@ services:
 
   judge0-worker:
     image: judge0/judge0:1.13.1
-    command: ["./scripts/worker"]
+    command: ["bundle", "exec", "sidekiq", "-c", "2"]
     privileged: true # Required for code execution sandboxing
     environment:
       - REDIS_PASSWORD=
