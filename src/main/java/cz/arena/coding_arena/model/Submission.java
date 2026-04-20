@@ -7,14 +7,16 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "submissions")
+@Table(name = "submissions", indexes = {
+        @Index(name = "idx_submission_time", columnList = "submitted_at")
+})
 @Getter @Setter @NoArgsConstructor
 public class Submission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "source_code", columnDefinition = "TEXT", nullable = false)
+    @Transient
     private String sourceCode;
 
     @Column(name = "language_id", nullable = false)
