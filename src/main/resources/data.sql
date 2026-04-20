@@ -27,7 +27,8 @@ ON CONFLICT DO NOTHING;
 INSERT INTO tasks (id, title, description, points_tier, time_limit_ms, memory_limit_kb) VALUES
 (1, 'Hello World', 'Write a program that outputs exactly: Hello World!', 100, 2000, 128000),
 (2, 'Simple Calculator', 'Read two space-separated numbers and output their sum.', 200, 2000, 128000),
-(3, 'Factorial', 'Read one number and output its factorial.', 300, 2000, 128000)
+(3, 'Factorial', 'Read one number and output its factorial.', 300, 2000, 128000),
+(4, 'Anagram Grouping', 'Read an integer N representing the number of words. The next line contains N space-separated lowercase words. Output the size of the largest group of anagrams.', 400, 2000, 128000)
 ON CONFLICT DO NOTHING;
 
 -- 7. Hidden test cases (Matches TestCase.java)
@@ -35,5 +36,8 @@ INSERT INTO test_cases (id, task_id, input_data, expected_output, is_hidden) VAL
 (1, 1, '', 'Hello World!', true),
 (2, 1, ' ', 'Hello World!', true),
 (3, 2, '5 5', '10', true),
-(4, 2, '-2 8', '6', true)
+(4, 2, '-2 8', '6', true),
+(5, 4, '6\neat tea tan ate nat bat', '3', true),
+(6, 4, '1\nhello', '1', true),
+(7, 4, '4\na b c d', '1', true)
 ON CONFLICT DO NOTHING;
