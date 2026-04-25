@@ -27,4 +27,7 @@ public class Task {
 
     @Column(name = "memory_limit_kb")
     private Integer memoryLimitKb;
+    @ManyToOne
+    @JoinColumn(name = "contest_id")
+    private Contest contest;
 }
