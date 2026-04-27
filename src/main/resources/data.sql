@@ -37,7 +37,7 @@ INSERT INTO test_cases (id, task_id, input_data, expected_output, is_hidden) VAL
 (2, 1, ' ', 'Hello World!', true),
 (3, 2, '5 5', '10', true),
 (4, 2, '-2 8', '6', true),
-(5, 4, '6\neat tea tan ate nat bat', '3', true),
-(6, 4, '1\nhello', '1', true),
-(7, 4, '4\na b c d', '1', true)
+(5, 4, E'6\neat tea tan ate nat bat', '3', true),
+(6, 4, E'1\nhello', '1', true),
+(7, 4, E'4\na b c d', '1', true)
 ON CONFLICT DO NOTHING;
