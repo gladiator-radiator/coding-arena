@@ -77,7 +77,6 @@ public class SubmissionService {
         // 6. If all tests passed, mark the task assignment as COMPLETED
         if (allPassed) {
             assignment.setStatus("COMPLETED");
-            // Points calculation will go here later
             assignmentRepository.save(assignment);
         }
 
