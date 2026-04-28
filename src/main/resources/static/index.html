@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coding Arena - Proof of Concept</title>
+    <style>
+        :root { --bg: #1e1e2e; --text: #d4d4d4; --primary: #cba6f7; --secondary: #89b4fa; --danger: #f38ba8; --success: #a6e3a1; --surface: #313244; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); color: var(--text); padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        h1 { color: var(--primary); }
+        .container { display: flex; gap: 20px; width: 100%; max-width: 1200px; }
+        .panel { background: var(--surface); padding: 20px; border-radius: 8px; flex: 1; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        button { background: var(--secondary); color: #111; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; margin: 5px 0; transition: background 0.2s; }
+        button:hover { opacity: 0.8; }
+        button.danger { background: var(--danger); }
+        button.success { background: var(--success); }
+        textarea { width: 100%; height: 150px; background: #181825; color: var(--text); border: 1px solid #45475a; border-radius: 5px; padding: 10px; font-family: monospace; resize: vertical; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #45475a; }
+        th { color: var(--primary); }
+        #logs { background: #111; padding: 10px; border-radius: 5px; font-family: monospace; font-size: 0.9em; height: 150px; overflow-y: auto; color: var(--success); }
+        .row { display: flex; gap: 10px; justify-content: space-between; align-items: center;}
+    </style>
+</head>
+<body>
+
+<h1>Coding Arena PoC</h1>
+<p>Playing as: <strong>test_nax (User ID: 1)</strong> | Contest: <strong>Ladder (ID: 1)</strong></p>
+
+<div class="container">
+    <div class="panel">
+        <h2>Leaderboard</h2>
+        <button onclick="fetchLeaderboard()">Refresh Standings</button>
+        <table id="leaderboard">
+            <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Team</th>
+                <th>Points</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr><td colspan="3">Loading...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="panel" style="flex: 2;">
+        <h2>Active Play</h2>
+
+        <div class="row">
+            <div>
+                <button onclick="requestTask(100)">Request Task (100)</button>
+                <button onclick="requestTask(200)">Request Task (200)</button>
+                <button onclick="requestTask(400)">Request Task (400)</button>
+            </div>
+            <button class="danger" onclick="surrenderTask()">Surrender Task (-50)</button>
+        </div>
+
+        <h3 id="taskTitle">No Active Task</h3>
+        <p id="taskDesc">Request a task to begin.</p>
+
+        <textarea id="sourceCode" placeholder="# Write your Python 3 code here..."></textarea>
+        <br>
+        <button class="success" style="width: 100%;" onclick="submitCode()">Submit Code to Judge0</button>
+
+        <h3>Server Output:</h3>
+        <div id="logs">System ready...</div>
+    </div>
+</div>
+
+<script>
+    const API_BASE = "http://localhost:8080/api";
+    const HEADERS = { "X-User-Id": "1", "Content-Type": "application/json" };
+
+    function log(msg) {
+        const logs = document.getElementById("logs");
+        logs.innerHTML += `<div>> ${msg}</div>`;
+        logs.scrollTop = logs.scrollHeight;
+    }
+
+    async function fetchLeaderboard() {
+        try {
+            const res = await fetch(`${API_BASE}/leaderboard?contestId=1`, { headers: HEADERS });
+            const data = await res.json();
+            const tbody = document.querySelector("#leaderboard tbody");
+            tbody.innerHTML = "";
+            data.forEach((team, index) => {
+                tbody.innerHTML += `<tr><td>${index + 1}</td><td>${team.teamName}</td><td>${team.totalPoints}</td></tr>`;
+            });
+        } catch (e) {
+            log("Failed to fetch leaderboard.");
+        }
+    }
+
+    async function requestTask(tier) {
+        try {
+            const res = await fetch(`${API_BASE}/tasks/request?tier=${tier}&contestId=1`, { method: "POST", headers: HEADERS });
+            const data = await res.json();
+            if (res.ok) {
+                document.getElementById("taskTitle").innerText = `Task: ${data.task.title} (Tier: ${data.task.pointsTier})`;
+                document.getElementById("taskDesc").innerText = data.task.description;
+                log(`Task locked: ${data.task.title}`);
+            } else {
+                log(`Error: ${data.message}`);
+            }
+        } catch (e) { log(e.message); }
+    }
+
+    async function surrenderTask() {
+        try {
+            const res = await fetch(`${API_BASE}/tasks/surrender`, { method: "POST", headers: HEADERS });
+            if (res.ok) {
+                document.getElementById("taskTitle").innerText = "No Active Task";
+                document.getElementById("taskDesc").innerText = "Request a task to begin.";
+                log("Task surrendered. Penalty applied.");
+                fetchLeaderboard();
+            } else {
+                const data = await res.json();
+                log(`Error: ${data.message}`);
+            }
+        } catch (e) { log(e.message); }
+    }
+
+    async function submitCode() {
+        const code = document.getElementById("sourceCode").value;
+        log("Submitting code to Judge0...");
+        try {
+            const res = await fetch(`${API_BASE}/submissions`, {
+                method: "POST",
+                headers: HEADERS,
+                body: JSON.stringify({ contestId: 1, languageId: 71, sourceCode: code })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                log(`Result: ${data.verdict}`);
+                if (data.verdict === 'Accepted') {
+                    document.getElementById("taskTitle").innerText = "Task Completed!";
+                }
+                fetchLeaderboard();
+            } else {
+                log(`Error: ${data.message}`);
+            }
+        } catch (e) { log(e.message); }
+    }
+
+    // Initialize leaderboard on load
+    fetchLeaderboard();
+</script>
+</body>
+</html>
