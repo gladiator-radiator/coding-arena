@@ -25,7 +25,7 @@
 <body>
 
 <h1>Coding Arena PoC</h1>
-<p>Playing as: <strong>test_nax (User ID: 1)</strong> | Contest: <strong>Ladder (ID: 1)</strong></p>
+<p>Playing as: <strong id="playingAs">anonymous</strong> | Contest: <strong>Ladder (ID: 1)</strong></p>
 
 <div class="container">
     <div class="panel">
@@ -57,6 +57,12 @@
             <button class="danger" onclick="surrenderTask()">Surrender Task (-50)</button>
         </div>
 
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
+            <label for="userIdInput">User ID:</label>
+            <input id="userIdInput" type="text" placeholder="leave empty for anonymous" style="padding:6px;border-radius:4px;background:#0f1720;color:var(--text);border:1px solid #45475a;" />
+            <button onclick="applyUserId()">Set</button>
+        </div>
+
         <h3 id="taskTitle">No Active Task</h3>
         <p id="taskDesc">Request a task to begin.</p>
 
@@ -71,7 +77,22 @@
 
 <script>
     const API_BASE = "http://localhost:8080/api";
-    const HEADERS = { "X-User-Id": "1", "Content-Type": "application/json" };
+    // Do not send a default X-User-Id. User must set it explicitly in the UI.
+    let currentUserId = null;
+
+    function getHeaders(contentType = 'application/json') {
+        const headers = {};
+        if (currentUserId) headers['X-User-Id'] = String(currentUserId);
+        if (contentType) headers['Content-Type'] = contentType;
+        return headers;
+    }
+
+    function applyUserId() {
+        const input = document.getElementById('userIdInput').value.trim();
+        currentUserId = input === '' ? null : input;
+        document.getElementById('playingAs').innerText = currentUserId ? `user id: ${currentUserId}` : 'anonymous';
+        log(`Active user set to: ${currentUserId || 'anonymous'}`);
+    }
 
     function log(msg) {
         const logs = document.getElementById("logs");
@@ -81,7 +102,7 @@
 
     async function fetchLeaderboard() {
         try {
-            const res = await fetch(`${API_BASE}/leaderboard?contestId=1`, { headers: HEADERS });
+            const res = await fetch(`${API_BASE}/leaderboard?contestId=1`, { headers: getHeaders() });
             const data = await res.json();
             const tbody = document.querySelector("#leaderboard tbody");
             tbody.innerHTML = "";
@@ -95,7 +116,7 @@
 
     async function requestTask(tier) {
         try {
-            const res = await fetch(`${API_BASE}/tasks/request?tier=${tier}&contestId=1`, { method: "POST", headers: HEADERS });
+            const res = await fetch(`${API_BASE}/tasks/request?tier=${tier}&contestId=1`, { method: "POST", headers: getHeaders() });
             const data = await res.json();
             if (res.ok) {
                 document.getElementById("taskTitle").innerText = `Task: ${data.task.title} (Tier: ${data.task.pointsTier})`;
@@ -109,7 +130,7 @@
 
     async function surrenderTask() {
         try {
-            const res = await fetch(`${API_BASE}/tasks/surrender`, { method: "POST", headers: HEADERS });
+            const res = await fetch(`${API_BASE}/tasks/surrender`, { method: "POST", headers: getHeaders() });
             if (res.ok) {
                 document.getElementById("taskTitle").innerText = "No Active Task";
                 document.getElementById("taskDesc").innerText = "Request a task to begin.";
@@ -128,7 +149,7 @@
         try {
             const res = await fetch(`${API_BASE}/submissions`, {
                 method: "POST",
-                headers: HEADERS,
+                headers: getHeaders(),
                 body: JSON.stringify({ contestId: 1, languageId: 71, sourceCode: code })
             });
             const data = await res.json();

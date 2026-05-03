@@ -90,3 +90,13 @@ INSERT INTO submissions (id, language_id, submitted_at, verdict, task_assignment
 (101, 71, CURRENT_TIMESTAMP - INTERVAL '1 hour', 'Accepted', 101, 2),
 (102, 71, CURRENT_TIMESTAMP - INTERVAL '2 hours', 'Accepted', 102, 3)
 ON CONFLICT DO NOTHING;
+
+-- 10. Update Sequences to avoid Duplicate Key constraint violations
+SELECT setval(pg_get_serial_sequence('users', 'id'), coalesce(max(id), 1)) FROM users;
+SELECT setval(pg_get_serial_sequence('contests', 'id'), coalesce(max(id), 1)) FROM contests;
+SELECT setval(pg_get_serial_sequence('contest_participants', 'id'), coalesce(max(id), 1)) FROM contest_participants;
+SELECT setval(pg_get_serial_sequence('team_members', 'id'), coalesce(max(id), 1)) FROM team_members;
+SELECT setval(pg_get_serial_sequence('tasks', 'id'), coalesce(max(id), 1)) FROM tasks;
+SELECT setval(pg_get_serial_sequence('test_cases', 'id'), coalesce(max(id), 1)) FROM test_cases;
+SELECT setval(pg_get_serial_sequence('task_assignments', 'id'), coalesce(max(id), 1)) FROM task_assignments;
+SELECT setval(pg_get_serial_sequence('submissions', 'id'), coalesce(max(id), 1)) FROM submissions;
