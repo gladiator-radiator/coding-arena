@@ -1,0 +1,530 @@
+{
+  "info": {
+    "_postman_id": "4be04e10-b0ee-4360-bc91-1274d3eab0ef",
+    "name": "Coding Arena Flow",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "36851424"
+  },
+  "item": [
+    {
+      "name": "0a. Registrace nového uživatele",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"username\": \"novy_hrac\",\n    \"email\": \"hrac@gladiator.cz\",\n    \"passwordHash\": \"tajne_heslo\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/users/register",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "users",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "0b. Vytvoření nového týmu",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-User-Id",
+            "value": "1"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"name\": \"Ultimátní Bojovníci\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/teams",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "teams"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "0c. Připojení do existujícího týmu",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-User-Id",
+            "value": "2"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/api/teams/123e4567-e89b-12d3-a456-426614174000/join",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "teams",
+            "123e4567-e89b-12d3-a456-426614174000",
+            "join"
+          ]
+        },
+        "description": "POZOR: Nahraďte UUID (123e45...) v URL za ID, které jste dostali při založení týmu v requestu 0b (pokud se připojujete k novému)."
+      },
+      "response": []
+    },
+    {
+      "name": "0d. Vypsat všechny členy týmu",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-User-Id",
+            "value": "1"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/api/teams/123e4567-e89b-12d3-a456-426614174000/members",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "teams",
+            "123e4567-e89b-12d3-a456-426614174000",
+            "members"
+          ]
+        },
+        "description": "Vrává seznam všech členů daného týmu. ID týmu se vezme z odpovědi kroku 0b (vytvoření týmu) nebo si ho můžeš nahradit ručně."
+      },
+      "response": []
+    },
+    {
+      "name": "1. Ukázat úvodní Leaderboard",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-User-Id",
+            "value": "1"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/api/leaderboard?contestId=1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "leaderboard"
+          ],
+          "query": [
+            {
+              "key": "contestId",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "2. Vyzvednout lehkou úlohu (Tier 100)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-User-Id",
+            "value": "1"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/api/tasks/request?tier=100&contestId=1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "tasks",
+            "request"
+          ],
+          "query": [
+            {
+              "key": "tier",
+              "value": "100"
+            },
+            {
+              "key": "contestId",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "3. Odevzdat ŠPATNÝ kód (Ukázka chyby)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-User-Id",
+            "value": "1"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"contestId\": 1,\n    \"languageId\": 71,\n    \"sourceCode\": \"print('Hello World')\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/submissions",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "submissions"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "4. Odevzdat SPRÁVNÝ kód (Uznáno)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-User-Id",
+            "value": "1"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"contestId\": 1,\n    \"languageId\": 71,\n    \"sourceCode\": \"print('Hello World!')\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/submissions",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "submissions"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "5. Žebříček (100 bodů)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-User-Id",
+            "value": "1"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/api/leaderboard?contestId=1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "leaderboard"
+          ],
+          "query": [
+            {
+              "key": "contestId",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "6. Vyzvednout kalkulačku (Tier 200)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-User-Id",
+            "value": "1"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/api/tasks/request?tier=200&contestId=1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "tasks",
+            "request"
+          ],
+          "query": [
+            {
+              "key": "tier",
+              "value": "200"
+            },
+            {
+              "key": "contestId",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "7. Vzdát se kalkulačky (-50 trestných bodů)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-User-Id",
+            "value": "1"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/api/tasks/surrender",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "tasks",
+            "surrender"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "8. Vyzvednout těžkou logiku (Tier 400 Anagramy)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-User-Id",
+            "value": "1"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/api/tasks/request?tier=400&contestId=1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "tasks",
+            "request"
+          ],
+          "query": [
+            {
+              "key": "tier",
+              "value": "400"
+            },
+            {
+              "key": "contestId",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "9. Vyřešení Anagramů (Python Stdin Parsing)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-User-Id",
+            "value": "1"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"contestId\": 1,\n    \"languageId\": 71,\n    \"sourceCode\": \"import sys\\ndata = sys.stdin.read().split()\\ncounts = {}\\nfor w in data[1:]:\\n    key = ''.join(sorted(w))\\n    counts[key] = counts.get(key, 0) + 1\\nprint(max(counts.values()) if counts else 1)\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/submissions",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "submissions"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "10. Konečný Žebříček (Finále - 450 bodů)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-User-Id",
+            "value": "1"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/api/leaderboard?contestId=1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "leaderboard"
+          ],
+          "query": [
+            {
+              "key": "contestId",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "11. LIVE (Aktivní): Request Task",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-User-Id",
+            "value": "1"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/api/tasks/request?tier=100&contestId=2",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "tasks",
+            "request"
+          ],
+          "query": [
+            {
+              "key": "tier",
+              "value": "100"
+            },
+            {
+              "key": "contestId",
+              "value": "2"
+            }
+          ]
+        },
+        "description": "Contest 2 je LIVE a aktuálně běží. Akce projde bez problémů."
+      },
+      "response": []
+    },
+    {
+      "name": "12. LIVE (Vypršený): Zažádat po Limitě (CHYBA a Reject)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-User-Id",
+            "value": "1"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/api/tasks/request?tier=100&contestId=3",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "tasks",
+            "request"
+          ],
+          "query": [
+            {
+              "key": "tier",
+              "value": "100"
+            },
+            {
+              "key": "contestId",
+              "value": "3"
+            }
+          ]
+        },
+        "description": "Contest 3 simuluje LIVE událost z minulosti. Validátor zakročí a hodí chybovou hlášku, že soutěž není aktivní a nedovolí operaci dokončit!"
+      },
+      "response": []
+    }
+  ]
+}
+
