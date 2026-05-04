@@ -24,6 +24,7 @@ public class AssignmentService {
 
         Long userId = UserContext.getUserId();
         Team team = getTeamForUser(userId);
+        contestService.ensureTeamParticipation(contestId, team);
 
         // 2. Lock check: Prevent requesting if they already have an active task
         assignmentRepository.findByTeamIdAndStatus(team.getId(), "LOCKED")

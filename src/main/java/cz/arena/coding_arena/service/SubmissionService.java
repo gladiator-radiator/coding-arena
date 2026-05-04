@@ -40,6 +40,8 @@ public class SubmissionService {
         TaskAssignment assignment = assignmentRepository.findByTeamIdAndStatus(team.getId(), "LOCKED")
                 .orElseThrow(() -> new RuntimeException("Your team does not have an active locked task to submit."));
 
+        contestService.ensureTeamParticipation(contestId, team);
+
         Task task = assignment.getTask();
 
         // 3. Load test cases for this task from the database
