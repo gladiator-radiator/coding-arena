@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/tasks")
 @RequiredArgsConstructor
@@ -18,8 +20,10 @@ public class TaskController {
     }
 
     @PostMapping("/surrender")
-    public ResponseEntity<String> surrender() {
+    public ResponseEntity<Map<String, String>> surrender() {
         assignmentService.surrenderTask();
-        return ResponseEntity.ok("Task surrendered successfully. A penalty of 50 points has been applied.");
+        return ResponseEntity.ok(Map.of(
+                "message", "Task surrendered successfully. A penalty of 50 points has been applied."
+        ));
     }
 }
