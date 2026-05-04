@@ -62,7 +62,8 @@ ON CONFLICT DO NOTHING;
 -- 8. Add more teams and users to populate the Leaderboard
 INSERT INTO users (id, username, email, password_hash, role) VALUES
 (2, 'test_ninja', 'ninja@arena.cz', 'dummy_hash', 'USER'),
-(3, 'test_byte', 'byte@arena.cz', 'dummy_hash', 'USER')
+(3, 'test_byte', 'byte@arena.cz', 'dummy_hash', 'USER'),
+(4, 'admin_user', 'admin@arena.cz', 'dummy_hash', 'ADMIN')
 ON CONFLICT DO NOTHING;
 
 INSERT INTO teams (id, name) VALUES

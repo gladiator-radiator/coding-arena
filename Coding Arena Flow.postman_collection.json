@@ -1,7 +1,7 @@
 {
   "info": {
-    "_postman_id": "4be04e10-b0ee-4360-bc91-1274d3eab0ef",
-    "name": "Coding Arena Flow",
+    "_postman_id": "aea6cdc2-b9b7-4583-9421-19e98de8f312",
+    "name": "Coding Arena Flow - Extended",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "36851424"
   },
@@ -43,7 +43,7 @@
         "header": [
           {
             "key": "X-User-Id",
-            "value": "1"
+            "value": "5"
           },
           {
             "key": "Content-Type",
@@ -104,7 +104,7 @@
         "header": [
           {
             "key": "X-User-Id",
-            "value": "1"
+            "value": "5"
           }
         ],
         "url": {
@@ -126,44 +126,13 @@
       "response": []
     },
     {
-      "name": "1. Ukázat úvodní Leaderboard",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "X-User-Id",
-            "value": "1"
-          }
-        ],
-        "url": {
-          "raw": "http://localhost:8080/api/leaderboard?contestId=1",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "api",
-            "leaderboard"
-          ],
-          "query": [
-            {
-              "key": "contestId",
-              "value": "1"
-            }
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "2. Vyzvednout lehkou úlohu (Tier 100)",
+      "name": "1. Vyzvednout lehkou úlohu (Tier 100) (Nový živatel)",
       "request": {
         "method": "POST",
         "header": [
           {
             "key": "X-User-Id",
-            "value": "1"
+            "value": "5"
           }
         ],
         "url": {
@@ -193,13 +162,44 @@
       "response": []
     },
     {
+      "name": "2. Ukázat  Leaderboard (Před odevzdáním)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-User-Id",
+            "value": "5"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/api/leaderboard?contestId=1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "leaderboard"
+          ],
+          "query": [
+            {
+              "key": "contestId",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
       "name": "3. Odevzdat ŠPATNÝ kód (Ukázka chyby)",
       "request": {
         "method": "POST",
         "header": [
           {
             "key": "X-User-Id",
-            "value": "1"
+            "value": "5"
           },
           {
             "key": "Content-Type",
@@ -232,7 +232,7 @@
         "header": [
           {
             "key": "X-User-Id",
-            "value": "1"
+            "value": "5"
           },
           {
             "key": "Content-Type",
@@ -265,7 +265,214 @@
         "header": [
           {
             "key": "X-User-Id",
-            "value": "1"
+            "value": "5"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/api/leaderboard?contestId=1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "leaderboard"
+          ],
+          "query": [
+            {
+              "key": "contestId",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "A1. Admin - Vytvoření nové úlohy",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-User-Id",
+            "value": "4"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"title\": \"Fibonacci\",\n    \"description\": \"Načti číslo N a vypiš N-tý Fibonacciho prvek. (F(1)=1, F(2)=1)\",\n    \"pointsTier\": 300,\n    \"timeLimitMs\": 2000,\n    \"memoryLimitKb\": 128000\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/admin/tasks",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "admin",
+            "tasks"
+          ]
+        },
+        "description": "Vytvoří novou úlohu. Vyžaduje uživatele s rolí ADMIN (X-User-Id: 4 = admin_user). ID nově vytvořené úlohy použij v requestu A2 pro přidání testovacích případů."
+      },
+      "response": []
+    },
+    {
+      "name": "A2. Admin - Přidání testovacího případu k úloze",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-User-Id",
+            "value": "4"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"inputData\": \"10\",\n    \"expectedOutput\": \"55\",\n    \"isHidden\": false\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/admin/tasks/5/testcases",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "admin",
+            "tasks",
+            "5",
+            "testcases"
+          ]
+        },
+        "description": "Přidá testovací případ k úloze s daným ID. POZOR: Nahraďte číslo 5 v URL za ID úlohy, které jste dostali v odpovědi requestu A1 (nebo libovolné existující task ID, např. 1–4). Vyžaduje roli ADMIN (X-User-Id: 4)."
+      },
+      "response": []
+    },
+    {
+      "name": "A3. Admin - Přístup zamítnut (Non-Admin uživatel)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-User-Id",
+            "value": "5"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"title\": \"Zakázaný pokus\",\n    \"description\": \"Tento request selže s HTTP 403.\",\n    \"pointsTier\": 100,\n    \"timeLimitMs\": 2000,\n    \"memoryLimitKb\": 128000\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/admin/tasks",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "admin",
+            "tasks"
+          ]
+        },
+        "description": "Ukázka zamítnutého přístupu — nový uživatel 5 má roli USER, ne ADMIN. Server vrátí HTTP 403 Forbidden."
+      },
+      "response": []
+    },
+    {
+      "name": "5b. Vyzvednout novou admin úlohu (Tier 300)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-User-Id",
+            "value": "5"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/api/tasks/request?tier=300&contestId=1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "tasks",
+            "request"
+          ],
+          "query": [
+            {
+              "key": "tier",
+              "value": "300"
+            },
+            {
+              "key": "contestId",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "5c. Odevzdat řešení Admin úlohy (Tier 300)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-User-Id",
+            "value": "5"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"contestId\": 1,\n    \"languageId\": 71,\n    \"sourceCode\": \"import sys\\nn = int(sys.stdin.read().strip())\\na, b = 1, 1\\nfor _ in range(n - 1):\\n    a, b = b, a + b\\nprint(a)\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/submissions",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "submissions"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "5d. Žebříček (400 bodů)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-User-Id",
+            "value": "5"
           }
         ],
         "url": {
@@ -296,7 +503,7 @@
         "header": [
           {
             "key": "X-User-Id",
-            "value": "1"
+            "value": "5"
           }
         ],
         "url": {
@@ -332,7 +539,7 @@
         "header": [
           {
             "key": "X-User-Id",
-            "value": "1"
+            "value": "5"
           }
         ],
         "url": {
@@ -358,7 +565,7 @@
         "header": [
           {
             "key": "X-User-Id",
-            "value": "1"
+            "value": "5"
           }
         ],
         "url": {
@@ -394,7 +601,7 @@
         "header": [
           {
             "key": "X-User-Id",
-            "value": "1"
+            "value": "5"
           },
           {
             "key": "Content-Type",
@@ -421,13 +628,13 @@
       "response": []
     },
     {
-      "name": "10. Konečný Žebříček (Finále - 450 bodů)",
+      "name": "10. Konečný Žebříček (Finále - 750 bodů)",
       "request": {
         "method": "GET",
         "header": [
           {
             "key": "X-User-Id",
-            "value": "1"
+            "value": "5"
           }
         ],
         "url": {
@@ -458,7 +665,7 @@
         "header": [
           {
             "key": "X-User-Id",
-            "value": "1"
+            "value": "5"
           }
         ],
         "url": {
@@ -495,7 +702,7 @@
         "header": [
           {
             "key": "X-User-Id",
-            "value": "1"
+            "value": "5"
           }
         ],
         "url": {
@@ -527,4 +734,3 @@
     }
   ]
 }
-
