@@ -10,7 +10,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,9 +19,9 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class AssignmentServiceTest {
 
     @Mock
@@ -38,19 +39,16 @@ class AssignmentServiceTest {
     @InjectMocks
     private AssignmentService assignmentService;
 
-    private User testUser;
     private Team testTeam;
     private UUID teamId;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-
         // Setup mock UserContext
         UserContext.setUserId(1L);
 
         // Setup mock data
-        testUser = new User();
+        User testUser = new User();
         testUser.setId(1L);
         testUser.setUsername("test_user");
 
@@ -100,6 +98,7 @@ class AssignmentServiceTest {
 
         // Verify dependencies were called
         verify(contestService).validateActionInContest(contestId);
+        verify(contestService).ensureTeamParticipation(contestId, testTeam);
         verify(assignmentRepository).save(any(TaskAssignment.class));
     }
 
